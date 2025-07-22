@@ -16,12 +16,14 @@ const tools = [
   { name:"Suno", description:"AI music generation", type:"Free + Paid", link:"https://www.suno.com" },
   { name:"Runway", description:"Creative video & image AI tools", type:"Free + Paid", link:"https://www.runwayml.com" },
   { name:"DeepL Translator", description:"Top translation AI", type:"Free + Paid", link:"https://www.deepl.com" },
-  { name:"GrammarlyGO", description:"AI writing assistant", type:"Free + Paid", link:"https://www.grammarly.com" },
+  { name:"GrammarlyGO", description:"AI writing assistant", type:"Free + Paid", link:"https://www.grammarly.com" }
 ];
 
 const container = document.getElementById("tools-container");
 const searchInput = document.getElementById("search");
+const toggleBtn = document.getElementById("theme-toggle");
 
+// Render tools
 function renderTools(filter = "") {
   container.innerHTML = "";
   tools
@@ -38,27 +40,14 @@ function renderTools(filter = "") {
       container.appendChild(card);
     });
 }
-
-// Render tools on DOM load
-window.addEventListener("DOMContentLoaded", () => {
-  renderTools();
-
-  // Apply saved theme
-  const savedTheme = localStorage.getItem("theme");
-  const toggleBtn = document.getElementById("theme-toggle");
-  if (savedTheme === "light") {
-    document.body.classList.add("light-theme");
-    toggleBtn.textContent = "🌙 Dark Mode";
-  } else {
-    document.body.classList.remove("light-theme");
-    toggleBtn.textContent = "☀️ Light Mode";
-  }
-});
-
 searchInput.addEventListener("input", e => renderTools(e.target.value));
+renderTools();
 
-// Theme Toggle
-const toggleBtn = document.getElementById("theme-toggle");
+// Theme
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light-theme");
+  toggleBtn.textContent = "🌙 Dark Mode";
+}
 toggleBtn.addEventListener("click", () => {
   document.body.classList.toggle("light-theme");
   const isLight = document.body.classList.contains("light-theme");
@@ -66,7 +55,7 @@ toggleBtn.addEventListener("click", () => {
   localStorage.setItem("theme", isLight ? "light" : "dark");
 });
 
-// Chatbot logic
+// Chatbot
 const chatBtn = document.getElementById("chatbot-button");
 const chatWindow = document.getElementById("chatbot-window");
 const closeChat = document.getElementById("close-chat");
@@ -75,15 +64,13 @@ const chatInput = document.getElementById("chat-input");
 
 chatBtn.addEventListener("click", () => chatWindow.classList.toggle("hidden"));
 closeChat.addEventListener("click", () => chatWindow.classList.add("hidden"));
-
 chatInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter" && chatInput.value.trim() !== "") {
     const userMsg = chatInput.value;
     chatBody.innerHTML += `<p><strong>You:</strong> ${userMsg}</p>`;
     chatInput.value = "";
-
     setTimeout(() => {
-      chatBody.innerHTML += `<p><strong>Bot:</strong> I'm still learning! Search your tool above. 😊</p>`;
+      chatBody.innerHTML += `<p><strong>Bot:</strong> I'm still learning! Try searching above 😊</p>`;
       chatBody.scrollTop = chatBody.scrollHeight;
     }, 600);
   }
