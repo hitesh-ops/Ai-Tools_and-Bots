@@ -1,13 +1,146 @@
-/* Add at end of style.css for chatbot */
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(to right, #0f0f0f, #1e1e1e);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background: #111;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  color: #0ff;
+}
+
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+header nav a:hover {
+  color: #0ff;
+}
+
+.toggle-btn {
+  background: #222;
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border: 1px solid #555;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle-btn:hover {
+  background: #333;
+}
+
+.hero {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.hero h2 {
+  font-size: 2rem;
+  color: #0ff;
+  margin-bottom: 0.8rem;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: #ccc;
+}
+
+#search {
+  padding: 0.6rem 1rem;
+  width: 90%;
+  max-width: 400px;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+  font-size: 1rem;
+}
+
+#tools-container {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.tool-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 1.2rem;
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.tool-card:hover {
+  transform: translateY(-5px);
+  border-color: #0ff;
+}
+
+.tool-card h3 {
+  color: #0ff;
+  margin-bottom: 0.5rem;
+}
+
+.tool-card p {
+  color: #ccc;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.tool-card a {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.4rem 0.8rem;
+  background: #0ff;
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+footer {
+  background: #111;
+  text-align: center;
+  padding: 1rem;
+  margin-top: auto;
+  color: #aaa;
+}
+
+/* Chatbot styles */
 #chatbot-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
   background: #0ff;
   color: #000;
-  font-size: 22px;
   padding: 10px 14px;
   border-radius: 50%;
+  font-size: 24px;
   cursor: pointer;
   box-shadow: 0 0 10px #0ff;
   z-index: 999;
@@ -17,15 +150,15 @@
   position: fixed;
   bottom: 80px;
   right: 20px;
-  width: 280px;
-  background: #222;
-  color: #fff;
-  border: 2px solid #0ff;
+  width: 320px;
+  max-width: 90%;
+  background: #1e1e1e;
+  border: 1px solid #555;
   border-radius: 10px;
-  box-shadow: 0 0 15px #0ff;
-  z-index: 999;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  z-index: 999;
 }
 
 #chatbot-window.hidden {
@@ -33,35 +166,29 @@
 }
 
 .chat-header {
-  padding: 10px;
   background: #0ff;
   color: #000;
+  padding: 0.7rem 1rem;
   font-weight: bold;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .chat-body {
-  padding: 10px;
+  padding: 1rem;
   height: 200px;
   overflow-y: auto;
-  background: #111;
-  font-size: 14px;
+  background: #222;
+  color: #fff;
+  font-size: 0.9rem;
 }
 
 #chat-input {
-  padding: 10px;
   border: none;
-  border-top: 1px solid #0ff;
-  background: #000;
-  color: #0ff;
+  border-top: 1px solid #555;
+  padding: 0.7rem 1rem;
+  background: #111;
+  color: #fff;
   outline: none;
-}
-
-/* Responsive tweaks */
-@media screen and (max-width: 600px) {
-  #chatbot-window {
-    width: 90%;
-    right: 5%;
-  }
 }
