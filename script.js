@@ -17,10 +17,8 @@ const tools = [
   { name:"Runway", description:"Creative video & image AI tools", type:"Free + Paid", link:"https://www.runwayml.com" },
   { name:"DeepL Translator", description:"Top translation AI", type:"Free + Paid", link:"https://www.deepl.com" },
   { name:"GrammarlyGO", description:"AI writing assistant", type:"Free + Paid", link:"https://www.grammarly.com" },
-  // Add remaining tools 18–150 here using same format...
 ];
 
-// Populate tools into the HTML
 const container = document.getElementById("tools-container");
 const searchInput = document.getElementById("search");
 
@@ -40,26 +38,45 @@ function renderTools(filter = "") {
       container.appendChild(card);
     });
 }
-
 searchInput.addEventListener("input", e => renderTools(e.target.value));
 renderTools();
-document.addEventListener("DOMContentLoaded", () => {
-  const toggleBtn = document.getElementById("theme-toggle");
 
+// Theme Toggle
+const toggleBtn = document.getElementById("theme-toggle");
+document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("theme") === "light") {
     document.body.classList.add("light-theme");
     toggleBtn.textContent = "🌙 Dark Mode";
   }
-
-  toggleBtn.addEventListener("click", () => {
-    document.body.classList.toggle("light-theme");
-
-    if (document.body.classList.contains("light-theme")) {
-      localStorage.setItem("theme", "light");
-      toggleBtn.textContent = "🌙 Dark Mode";
-    } else {
-      localStorage.setItem("theme", "dark");
-      toggleBtn.textContent = "☀️ Light Mode";
-    }
-  });
 });
+
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("light-theme");
+  const isLight = document.body.classList.contains("light-theme");
+  toggleBtn.textContent = isLight ? "🌙 Dark Mode" : "☀️ Light Mode";
+  localStorage.setItem("theme", isLight ? "light" : "dark");
+});
+
+// Chatbot logic
+const chatBtn = document.getElementById("chatbot-button");
+const chatWindow = document.getElementById("chatbot-window");
+const closeChat = document.getElementById("close-chat");
+const chatBody = document.getElementById("chat-body");
+const chatInput = document.getElementById("chat-input");
+
+chatBtn.addEventListener("click", () => chatWindow.classList.toggle("hidden"));
+closeChat.addEventListener("click", () => chatWindow.classList.add("hidden"));
+
+chatInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter" && chatInput.value.trim() !== "") {
+    const userMsg = chatInput.value;
+    chatBody.innerHTML += `<p><strong>You:</strong> ${userMsg}</p>`;
+    chatInput.value = "";
+
+    setTimeout(() => {
+      chatBody.innerHTML += `<p><strong>Bot:</strong> I'm still learning! Search your tool above. 😊</p>`;
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }, 600);
+  }
+});
+
