@@ -38,18 +38,27 @@ function renderTools(filter = "") {
       container.appendChild(card);
     });
 }
-searchInput.addEventListener("input", e => renderTools(e.target.value));
-renderTools();
 
-// Theme Toggle
-const toggleBtn = document.getElementById("theme-toggle");
-document.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("theme") === "light") {
+// Render tools on DOM load
+window.addEventListener("DOMContentLoaded", () => {
+  renderTools();
+
+  // Apply saved theme
+  const savedTheme = localStorage.getItem("theme");
+  const toggleBtn = document.getElementById("theme-toggle");
+  if (savedTheme === "light") {
     document.body.classList.add("light-theme");
     toggleBtn.textContent = "🌙 Dark Mode";
+  } else {
+    document.body.classList.remove("light-theme");
+    toggleBtn.textContent = "☀️ Light Mode";
   }
 });
 
+searchInput.addEventListener("input", e => renderTools(e.target.value));
+
+// Theme Toggle
+const toggleBtn = document.getElementById("theme-toggle");
 toggleBtn.addEventListener("click", () => {
   document.body.classList.toggle("light-theme");
   const isLight = document.body.classList.contains("light-theme");
@@ -79,4 +88,3 @@ chatInput.addEventListener("keypress", (e) => {
     }, 600);
   }
 });
-
