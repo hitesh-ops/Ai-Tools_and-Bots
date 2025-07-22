@@ -3,42 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Global AI Tools</title>
+  <title>AIDost Dashboard</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <button id="theme-toggle" class="toggle-btn">☀️ Light Mode</button>
-    <h1>🌍 Global AI Tools</h1>
-    <nav>
-      <a href="login.html">Login</a>
-      <a href="register.html">Register</a>
-      <a href="dashboard.html">Dashboard</a>
-    </nav>
+    <h1>AIDost</h1>
+    <input type="text" id="searchInput" placeholder="Search AI tools...">
+    <label class="switch">
+      <input type="checkbox" id="toggle-mode">
+      <span class="slider round"></span>
+    </label>
   </header>
-  
-  <section class="hero">
-    <h2>Discover the Best AI Tools from Around the World</h2>
-    <p>Compare, explore, and use AI tools for productivity, content creation, coding, and more.</p>
-    <input type="text" id="search" placeholder="Search AI tools..." />
-  </section>
 
-  <section id="tools-container">
-    <!-- JS injects tool cards here -->
-  </section>
-
-  <div id="chatbot-button">💬</div>
-  <div id="chatbot-window" class="hidden">
-    <div class="chat-header">Assistant Bot <span id="close-chat">✖️</span></div>
-    <div class="chat-body" id="chat-body">
-      <p><em>Hello! Ask me anything about AI tools.</em></p>
+  <main id="tools-section">
+    <div class="tool-card">
+      <h2>ChatGPT</h2>
+      <p>AI chatbot by OpenAI</p>
+      <a href="#">Try Now</a>
     </div>
-    <input type="text" id="chat-input" placeholder="Type a message..." />
-  </div>
+    <div class="tool-card">
+      <h2>Image Generator</h2>
+      <p>Create AI-generated images</p>
+      <a href="#">Try Now</a>
+    </div>
+    <!-- Add more tools as needed -->
+  </main>
 
-  <footer>
-    <p>© 2025 Global AI Tools</p>
-  </footer>
+  <section id="chatbot-section">
+    <div id="chat-messages"></div>
+    <input type="text" id="chat-input" placeholder="Ask something...">
+    <button id="send-btn">Send</button>
+  </section>
 
   <script src="script.js"></script>
 </body>
