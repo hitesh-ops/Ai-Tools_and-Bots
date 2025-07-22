@@ -24,8 +24,17 @@
   </section>
 
   <section id="tools-container">
-    <!-- Tools loaded by JS -->
+    <!-- JS injects tool cards here -->
   </section>
+
+  <div id="chatbot-button">💬</div>
+  <div id="chatbot-window" class="hidden">
+    <div class="chat-header">Assistant Bot <span id="close-chat">✖️</span></div>
+    <div class="chat-body" id="chat-body">
+      <p><em>Hello! Ask me anything about AI tools.</em></p>
+    </div>
+    <input type="text" id="chat-input" placeholder="Type a message..." />
+  </div>
 
   <footer>
     <p>© 2025 Global AI Tools</p>
