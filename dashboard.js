@@ -1,102 +1,146 @@
-const toggleBtn = document.getElementById("toggleMode");
-const body = document.body;
-const searchInput = document.getElementById("searchInput");
-const filterType = document.getElementById("filterType");
+const toolData = {
+  "Educational Tools": [
+    {
+      name: "TutorAI",
+      desc: "Learn anything instantly using AI.",
+      type: "free",
+      link: "#"
+    },
+    {
+      name: "StudyMonkey",
+      desc: "Generate notes and answers fast.",
+      type: "paid",
+      link: "#"
+    }
+  ],
+  "Content & Writing Tools": [
+    {
+      name: "Copy.ai",
+      desc: "Write better marketing copy with AI.",
+      type: "free",
+      link: "#"
+    },
+    {
+      name: "Jasper",
+      desc: "Advanced AI writing assistant.",
+      type: "paid",
+      link: "#"
+    }
+  ],
+  "Image & Design Tools": [
+    {
+      name: "Canva AI",
+      desc: "Create designs powered by AI.",
+      type: "free",
+      link: "#"
+    },
+    {
+      name: "Midjourney",
+      desc: "Generate AI art with prompts.",
+      type: "paid",
+      link: "#"
+    }
+  ],
+  "Video & Audio Tools": [
+    {
+      name: "Runway ML",
+      desc: "AI tools for video editing.",
+      type: "paid",
+      link: "#"
+    },
+    {
+      name: "Lumen5",
+      desc: "Turn text to video easily.",
+      type: "free",
+      link: "#"
+    }
+  ],
+  "Developer Tools": [
+    {
+      name: "GitHub Copilot",
+      desc: "AI pair programmer for coding.",
+      type: "paid",
+      link: "#"
+    },
+    {
+      name: "Codeium",
+      desc: "Free AI autocomplete tool.",
+      type: "free",
+      link: "#"
+    }
+  ],
+  "Business & Marketing Tools": [
+    {
+      name: "Pictory",
+      desc: "Turn blogs into videos.",
+      type: "paid",
+      link: "#"
+    },
+    {
+      name: "Ocoya",
+      desc: "AI social media management.",
+      type: "free",
+      link: "#"
+    }
+  ]
+};
 
-// Tool list with category
-const tools = [
-  { name: "AI Tutor Bot", type: "free", category: "education", link: "https://tutorai.com" },
-  { name: "MCQ Generator", type: "free", category: "education", link: "https://mcqgen.com" },
-  { name: "ChatGPT", type: "free", category: "content", link: "https://chat.openai.com" },
-  { name: "Copy.ai", type: "paid", category: "content", link: "https://www.copy.ai/" },
-  { name: "Grammarly", type: "free", category: "content", link: "https://grammarly.com" },
-  { name: "Canva AI", type: "free", category: "image", link: "https://www.canva.com" },
-  { name: "Remove.bg", type: "free", category: "image", link: "https://remove.bg" },
-  { name: "Midjourney", type: "paid", category: "image", link: "https://www.midjourney.com" },
-  { name: "Runway", type: "paid", category: "video", link: "https://runwayml.com" },
-  { name: "Descript", type: "free", category: "video", link: "https://descript.com" },
-  { name: "Play.ht", type: "free", category: "video", link: "https://play.ht" },
-  { name: "Code Debugger", type: "free", category: "dev", link: "https://python.tutor.com" },
-  { name: "Regex Generator", type: "free", category: "dev", link: "https://regex101.com" },
-  { name: "Zapier", type: "free", category: "business", link: "https://zapier.com" },
-  { name: "Beautiful.ai", type: "paid", category: "business", link: "https://www.beautiful.ai/" },
-  { name: "SlidesAI", type: "free", category: "business", link: "https://slidesai.io" }
-];
+const container = document.getElementById("toolSections");
 
-// Render tools by category
 function renderTools(filter = "all", search = "") {
-  const categories = {
-    education: document.getElementById("educationTools"),
-    content: document.getElementById("contentTools"),
-    image: document.getElementById("imageTools"),
-    video: document.getElementById("videoTools"),
-    dev: document.getElementById("devTools"),
-    business: document.getElementById("businessTools")
-  };
+  container.innerHTML = "";
+  for (let category in toolData) {
+    const tools = toolData[category]
+      .filter(t => (filter === "all" || t.type === filter) && t.name.toLowerCase().includes(search.toLowerCase()));
+    
+    if (tools.length === 0) continue;
 
-  for (let key in categories) {
-    categories[key].innerHTML = "";
-  }
+    const section = document.createElement("section");
+    const title = document.createElement("h2");
+    title.textContent = category;
+    section.appendChild(title);
 
-  tools
-    .filter(tool =>
-      (filter === "all" || tool.type === filter) &&
-      tool.name.toLowerCase().includes(search.toLowerCase())
-    )
-    .forEach(tool => {
+    const grid = document.createElement("div");
+    grid.className = "tools-grid";
+
+    tools.forEach(tool => {
       const card = document.createElement("div");
       card.className = "tool-card";
       card.innerHTML = `
         <h3>${tool.name}</h3>
-        <a href="${tool.link}" target="_blank" class="tool-btn">Try Now</a>
-        <span class="badge ${tool.type}">${tool.type.toUpperCase()}</span>
+        <div class="type">(${tool.type.toUpperCase()})</div>
+        <p>${tool.desc}</p>
+        <button onclick="window.open('${tool.link}', '_blank')">Try Now</button>
       `;
-      categories[tool.category].appendChild(card);
+      grid.appendChild(card);
     });
+
+    section.appendChild(grid);
+    container.appendChild(section);
+  }
 }
 
-searchInput.addEventListener("input", () => {
-  renderTools(filterType.value, searchInput.value);
+document.getElementById("searchInput").addEventListener("input", () => {
+  const s = document.getElementById("searchInput").value;
+  const f = document.getElementById("filterType").value;
+  renderTools(f, s);
 });
-filterType.addEventListener("change", () => {
-  renderTools(filterType.value, searchInput.value);
+
+document.getElementById("filterType").addEventListener("change", () => {
+  const s = document.getElementById("searchInput").value;
+  const f = document.getElementById("filterType").value;
+  renderTools(f, s);
+});
+
+document.getElementById("toggleMode").addEventListener("click", () => {
+  document.body.classList.toggle("dark-theme");
+  const btn = document.getElementById("toggleMode");
+  btn.textContent = document.body.classList.contains("dark-theme") ? "🌙 Dark" : "☀️ Light";
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-  localStorage.removeItem("user");
-  window.location.href = "login.html";
+  localStorage.removeItem("isLoggedIn");
+  location.href = "index.html";
 });
 
-document.getElementById("homeBtn").addEventListener("click", () => {
-  window.location.href = "index.html";
-});
-
-const savedTheme = localStorage.getItem("theme");
-if (savedTheme === "light") {
-  body.classList.add("light-theme");
-  body.classList.remove("dark-theme");
-  toggleBtn.textContent = "🌙 Dark Mode";
-} else {
-  body.classList.add("dark-theme");
-  body.classList.remove("light-theme");
-  toggleBtn.textContent = "☀️ Light Mode";
-}
-
-toggleBtn.addEventListener("click", () => {
-  const isDark = body.classList.contains("dark-theme");
-  if (isDark) {
-    body.classList.remove("dark-theme");
-    body.classList.add("light-theme");
-    toggleBtn.textContent = "🌙 Dark Mode";
-    localStorage.setItem("theme", "light");
-  } else {
-    body.classList.remove("light-theme");
-    body.classList.add("dark-theme");
-    toggleBtn.textContent = "☀️ Light Mode";
-    localStorage.setItem("theme", "dark");
-  }
-});
-
-window.addEventListener("DOMContentLoaded", () => {
-  renderTools();
-});
+renderTools();
