@@ -17,7 +17,7 @@
       <button id="logoutBtn" class="logout-btn">Logout</button>
     </div>
   </header>
-<script defer src="dashboard.js"></script>
+
   <section class="search-section">
     <input type="text" id="searchInput" placeholder="Search tools..." />
     <select id="filterType">
@@ -27,13 +27,21 @@
     </select>
   </section>
 
-  <section id="toolsContainer" class="tools-grid">
-    <!-- JS will load tools here -->
+  <!-- Original AI Tools Section -->
+  <section id="toolsContainer" class="tools-grid"></section>
+
+  <!-- New Sections -->
+  <section class="tool-sections">
+    <h2>🧰 Editing Tools</h2>
+    <div id="editingTools" class="tools-grid"></div>
+
+    <h2>💻 Coding Tools</h2>
+    <div id="codingTools" class="tools-grid"></div>
+
+    <h2>🤖 AI + Dev Combo Tools</h2>
+    <div id="aiDevTools" class="tools-grid"></div>
   </section>
 
   <audio id="clickSound" src="click.mp3" preload="auto"></audio>
-<input type="text" id="search-input" placeholder="Search tools...">
-<div id="tool-container"></div>
-
 </body>
 </html>
