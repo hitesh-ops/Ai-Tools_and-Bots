@@ -10,7 +10,7 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
       name: email.split("@")[0]
     };
     localStorage.setItem("user", JSON.stringify(user));
-    window.location.href = "dashboard.html";
+    window.location.href = "dashboard.html"; // login ke baad redirect
   } else {
     alert("Invalid login!");
   }
