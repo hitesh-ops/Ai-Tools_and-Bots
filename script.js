@@ -10,9 +10,9 @@ const tools = [
   { name:"Notion AI", description:"AI in Notion for notes & writing", type:"Paid", link:"https://www.notion.so" },
   { name:"Writesonic", description:"AI writing & copy", type:"Free + Paid", link:"https://writesonic.com" },
   { name:"Otter.ai", description:"Meeting transcription AI", type:"Free + Paid", link:"https://otter.ai" },
-  { name:"Speechify", description:"Text‑to‑speech powered by AI", type:"Free + Paid", link:"https://www.speechify.com" },
+  { name:"Speechify", description:"Text-to-speech powered by AI", type:"Free + Paid", link:"https://www.speechify.com" },
   { name:"Copy.ai", description:"Marketing & blogging AI", type:"Free + Paid", link:"https://www.copy.ai" },
-  { name:"Claude Opus 4", description:"High‑reasoning LLM from Anthropic", type:"Paid", link:"https://www.anthropic.com/claude" },
+  { name:"Claude Opus 4", description:"High-reasoning LLM from Anthropic", type:"Paid", link:"https://www.anthropic.com/claude" },
   { name:"Suno", description:"AI music generation", type:"Free + Paid", link:"https://www.suno.com" },
   { name:"Runway", description:"Creative video & image AI tools", type:"Free + Paid", link:"https://www.runwayml.com" },
   { name:"DeepL Translator", description:"Top translation AI", type:"Free + Paid", link:"https://www.deepl.com" },
@@ -55,7 +55,7 @@ toggleBtn.addEventListener("click", () => {
   localStorage.setItem("theme", isLight ? "light" : "dark");
 });
 
-// Chatbot
+// Chatbot (Updated with AI)
 const chatBtn = document.getElementById("chatbot-button");
 const chatWindow = document.getElementById("chatbot-window");
 const closeChat = document.getElementById("close-chat");
@@ -64,14 +64,23 @@ const chatInput = document.getElementById("chat-input");
 
 chatBtn.addEventListener("click", () => chatWindow.classList.toggle("hidden"));
 closeChat.addEventListener("click", () => chatWindow.classList.add("hidden"));
-chatInput.addEventListener("keypress", (e) => {
+
+chatInput.addEventListener("keypress", async (e) => {
   if (e.key === "Enter" && chatInput.value.trim() !== "") {
-    const userMsg = chatInput.value;
+    const userMsg = chatInput.value.trim();
     chatBody.innerHTML += `<p><strong>You:</strong> ${userMsg}</p>`;
     chatInput.value = "";
-    setTimeout(() => {
-      chatBody.innerHTML += `<p><strong>Bot:</strong> I'm still learning! Try searching above 😊</p>`;
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }, 600);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    try {
+      // AI response using Puter.js
+      const response = await puter.ai.chat(userMsg, { model: 'meta-llama/Llama-3-8b-chat-hf' });
+      chatBody.innerHTML += `<p><strong>Bot:</strong> ${response.output_text}</p>`;
+    } catch (error) {
+      console.error(error);
+      chatBody.innerHTML += `<p><strong>Bot:</strong> Sorry, kuch error ho gaya 😅</p>`;
+    }
+
+    chatBody.scrollTop = chatBody.scrollHeight;
   }
 });
