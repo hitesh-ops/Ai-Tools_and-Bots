@@ -55,7 +55,7 @@ toggleBtn.addEventListener("click", () => {
   localStorage.setItem("theme", isLight ? "light" : "dark");
 });
 
-// Chatbot (Updated with AI)
+// Chatbot frontend
 const chatBtn = document.getElementById("chatbot-button");
 const chatWindow = document.getElementById("chatbot-window");
 const closeChat = document.getElementById("close-chat");
@@ -73,11 +73,14 @@ chatInput.addEventListener("keypress", async (e) => {
     chatBody.scrollTop = chatBody.scrollHeight;
 
     try {
-      // AI response using Puter.js
-      const response = await puter.ai.chat(userMsg, { model: 'meta-llama/Llama-3-8b-chat-hf' });
-      chatBody.innerHTML += `<p><strong>Bot:</strong> ${response.output_text}</p>`;
-    } catch (error) {
-      console.error(error);
+      const res = await fetch("http://localhost:3000/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMsg })
+      });
+      const data = await res.json();
+      chatBody.innerHTML += `<p><strong>Bot:</strong> ${data.reply}</p>`;
+    } catch (err) {
       chatBody.innerHTML += `<p><strong>Bot:</strong> Sorry, kuch error ho gaya 😅</p>`;
     }
 
