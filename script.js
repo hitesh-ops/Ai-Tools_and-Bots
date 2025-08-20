@@ -35,7 +35,7 @@ function renderTools(filter = "") {
         <h3>${tool.name}</h3>
         <p>${tool.description}</p>
         <p><strong>Type:</strong> ${tool.type}</p>
-        <a href="${tool.link}" target="_blank">Visit Tool</a>
+        <a class="cta" href="${tool.link}" target="_blank">Visit Tool</a>
       `;
       container.appendChild(card);
     });
@@ -43,14 +43,14 @@ function renderTools(filter = "") {
 searchInput.addEventListener("input", e => renderTools(e.target.value));
 renderTools();
 
-// Theme
+// Theme Toggle (fixed)
 if (localStorage.getItem("theme") === "light") {
-  document.body.classList.add("light-theme");
+  document.documentElement.classList.add("light");
   toggleBtn.textContent = "🌙 Dark Mode";
 }
 toggleBtn.addEventListener("click", () => {
-  document.body.classList.toggle("light-theme");
-  const isLight = document.body.classList.contains("light-theme");
+  document.documentElement.classList.toggle("light");
+  const isLight = document.documentElement.classList.contains("light");
   toggleBtn.textContent = isLight ? "🌙 Dark Mode" : "☀️ Light Mode";
   localStorage.setItem("theme", isLight ? "light" : "dark");
 });
