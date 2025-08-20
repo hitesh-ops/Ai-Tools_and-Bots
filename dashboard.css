@@ -1,196 +1,259 @@
-/* 🌙 Dark / ☀️ Light theme variables */
+/* =========================
+   AIDost Dashboard — dashboard.css
+   Cyberpunk glass • neon glow • 3D hover • animated bg
+   (class/id names unchanged)
+========================= */
+
+/* Theme tokens */
 :root {
-  --bg-dark: #0f0f1a;
-  --bg-light: #f4f4f9;
-  --text-dark: #ffffff;
-  --text-light: #111111;
-  --accent: #00ffe7;
-  --card-dark: #1b1b2f;
-  --card-light: #ffffff;
-  --shadow: 0 0 15px rgba(0, 255, 231, 0.5);
-}
-
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  transition: background 0.4s, color 0.4s;
-}
-
-/* Default Dark Theme */
-body.dark-theme {
-  background: var(--bg-dark);
-  color: var(--text-dark);
+  --bg: #0b0f14;
+  --layer: #0f141b;
+  --text: #e8edf2;
+  --muted: #a8b3c1;
+  --accent: #6ae3ff;    /* cyan */
+  --accent2: #a78bfa;   /* violet */
+  --danger: #ff3b6b;
+  --card: rgba(255,255,255,0.06);
+  --ring: 0 0 0 / 0%;
+  --radius: 18px;
+  --blur: 14px;
+  --shadow: 0 18px 60px rgba(0,0,0,.5);
+  --speed: .25s;
 }
 
 body.light-theme {
-  background: var(--bg-light);
-  color: var(--text-light);
+  --bg: #f6f7fb;
+  --layer: #ffffff;
+  --text: #0f1720;
+  --muted: #5b6677;
+  --accent: #007aff;
+  --accent2: #7c3aed;
+  --card: rgba(10,10,20,0.06);
+  --shadow: 0 18px 60px rgba(0,0,0,.08);
 }
 
-/* 🔹 Header */
+/* Base */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 10% -10%, rgba(106,227,255,.12), transparent 40%),
+              radial-gradient(900px 500px at 110% 10%, rgba(167,139,250,.10), transparent 35%),
+              linear-gradient(180deg, var(--bg) 0%, var(--layer) 100%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+/* Animated gradient film (subtle) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  background: conic-gradient(from 0deg,
+    rgba(106,227,255,.12),
+    rgba(167,139,250,.10),
+    rgba(106,227,255,.12)
+  );
+  filter: blur(80px);
+  animation: swirl 18s linear infinite;
+  z-index: -2;
+  pointer-events: none;
+}
+@keyframes swirl { to { transform: rotate(360deg); } }
+
+/* Floating particles */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.3), transparent 60%),
+    radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,.25), transparent 60%),
+    radial-gradient(2px 2px at 80% 20%, rgba(255,255,255,.2), transparent 60%);
+  opacity: .35;
+  animation: drift 24s ease-in-out infinite alternate;
+  z-index: -1;
+  pointer-events: none;
+}
+@keyframes drift { to { transform: translateY(-30px) translateX(20px); } }
+
+/* Header */
 .dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px;
-  background: linear-gradient(90deg, #111, #1a1a2e);
-  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border-bottom: 1px solid color-mix(in oklab, var(--text) 10%, transparent);
+  backdrop-filter: blur(12px) saturate(140%);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
 
 .dashboard-header h1 {
-  font-size: 1.8rem;
-  background: linear-gradient(90deg, #00ffe7, #0077ff);
+  margin: 0;
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-weight: bold;
-  animation: glow 2s infinite alternate;
+  letter-spacing: .3px;
+  animation: title-flicker 3.2s ease-in-out infinite alternate;
+}
+@keyframes title-flicker {
+  0%, 100% { text-shadow: 0 0 12px color-mix(in oklab, var(--accent) 40%, transparent); }
+  50%      { text-shadow: 0 0 20px color-mix(in oklab, var(--accent2) 50%, transparent); }
 }
 
-@keyframes glow {
-  from { text-shadow: 0 0 10px #00ffe7; }
-  to   { text-shadow: 0 0 20px #0077ff; }
-}
+.header-buttons { display: flex; gap: 10px; }
 
-/* 🔹 Header Buttons */
-.header-buttons {
-  display: flex;
-  gap: 12px;
-}
-
-.header-buttons button {
-  padding: 8px 14px;
-  border: none;
-  border-radius: 8px;
+/* Buttons (ids kept; classes used for styling) */
+.header-buttons button,
+.toggle-mode, .home-btn, .logout-btn {
+  position: relative;
+  border: 1px solid color-mix(in oklab, var(--text) 14%, transparent);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 12px;
   cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  transition: transform var(--speed), box-shadow var(--speed), border-color var(--speed);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
 }
 
-.toggle-mode {
-  background: #00ffe7;
-  color: #111;
-  box-shadow: var(--shadow);
+/* ripple */
+.header-buttons button::after {
+  content:"";
+  position:absolute; inset:auto; width:0; height:0; border-radius:50%;
+  background: color-mix(in oklab, var(--accent) 50%, transparent);
+  opacity:.35; transform: translate(-50%,-50%);
+  transition: width .5s ease, height .5s ease, opacity .5s ease;
+}
+.header-buttons button:active::after {
+  left: var(--x, 50%); top: var(--y, 50%);
+  width: 280px; height: 280px; opacity: 0;
+}
+.header-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(106,227,255,.18);
+  border-color: color-mix(in oklab, var(--accent) 40%, transparent);
 }
 
-.toggle-mode:hover {
-  transform: scale(1.05);
-}
+.toggle-mode { border-color: color-mix(in oklab, var(--accent) 45%, transparent); }
+.logout-btn  { border-color: color-mix(in oklab, var(--danger) 50%, transparent); }
+.logout-btn:hover { box-shadow: 0 12px 34px rgba(255,59,107,.28); }
 
-.home-btn {
-  background: #444;
-  color: #fff;
-}
-
-.home-btn:hover {
-  background: #666;
-}
-
-.logout-btn {
-  background: #ff0055;
-  color: #fff;
-}
-
-.logout-btn:hover {
-  background: #ff3366;
-  transform: scale(1.05);
-}
-
-/* 🔹 Search Section */
+/* Search + Filter */
 .search-section {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin: 25px 0;
+  display: flex; justify-content: center; align-items: center; gap: 12px;
+  padding: 16px;
 }
-
-.search-section input,
-.search-section select {
-  padding: 10px 15px;
-  border: 2px solid var(--accent);
-  border-radius: 8px;
-  background: transparent;
-  color: inherit;
-  outline: none;
-  font-size: 1rem;
-  transition: all 0.3s;
-}
-
-.search-section input:focus,
-.search-section select:focus {
-  box-shadow: var(--shadow);
-}
-
-/* 🔹 Tools Grid */
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 20px 40px;
-}
-
-.tool-card {
-  background: var(--card-dark);
+#searchInput, #filterType {
+  width: min(520px, 70vw);
+  padding: 12px 14px;
   border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 0 12px rgba(0, 255, 231, 0.2);
-  transition: transform 0.3s, box-shadow 0.3s;
-  text-align: center;
-  cursor: pointer;
+  border: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--speed), box-shadow var(--speed), transform var(--speed);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04), var(--shadow);
+}
+#filterType { width: 160px; }
+#searchInput::placeholder { color: color-mix(in oklab, var(--muted) 70%, transparent); }
+#searchInput:focus, #filterType:focus {
+  border-color: color-mix(in oklab, var(--accent) 45%, transparent);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--accent) 16%, transparent);
+  transform: translateY(-1px);
 }
 
-body.light-theme .tool-card {
-  background: var(--card-light);
-  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+/* Grid with perspective for 3D hover */
+.tools-grid {
+  --min: 260px;
+  width: min(1200px, 92%);
+  margin: 6px auto 60px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--min), 1fr));
+  gap: 18px;
+  perspective: 900px;
 }
 
-.tool-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 0 25px rgba(0, 255, 231, 0.6);
-}
-
-.tool-card h3 {
-  margin: 10px 0;
-  font-size: 1.2rem;
-  color: var(--accent);
-}
-
-.tool-card p {
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
-
-/* 🔹 Try Now Button */
-.try-btn {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 10px 18px;
-  background: var(--accent);
-  color: #111;
-  border-radius: 8px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.try-btn:hover {
-  background: #00ccff;
-  transform: scale(1.05);
+/* Tool card (JS injects .tool-card) */
+.tool-card {
+  background: linear-gradient(180deg, var(--card), color-mix(in oklab, var(--card) 60%, transparent));
+  border: 1px solid color-mix(in oklab, var(--text) 10%, transparent);
+  border-radius: var(--radius);
+  padding: 16px;
+  backdrop-filter: blur(var(--blur));
   box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition: transform .5s cubic-bezier(.2,.8,.2,1), border-color var(--speed), box-shadow var(--speed), background var(--speed);
 }
 
-/* 🔹 Responsive */
-@media(max-width: 600px) {
-  .dashboard-header {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .header-buttons {
-    margin-top: 10px;
-  }
-
-  .search-section {
-    flex-direction: column;
-    padding: 0 20px;
-  }
+/* neon wash */
+.tool-card::after {
+  content:"";
+  position:absolute; inset:-1px;
+  background:
+    radial-gradient(600px 200px at -10% -20%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 40%),
+    radial-gradient(600px 200px at 110% 120%, color-mix(in oklab, var(--accent2) 14%, transparent), transparent 40%);
+  mix-blend-mode: plus-lighter; opacity:.6; pointer-events:none; z-index:-1;
 }
+
+/* 3D hover tilt */
+.tool-card:hover {
+  transform: rotateX(6deg) rotateY(-6deg) translateY(-6px);
+  border-color: color-mix(in oklab, var(--accent) 35%, transparent);
+  box-shadow: 0 24px 60px rgba(0,0,0,.45);
+}
+
+/* Card content */
+.tool-card h3 { margin: 4px 0 6px; font-size: 18px; letter-spacing:.2px; }
+.tool-card p { margin: 0; color: var(--muted); font-size: 14px; }
+
+/* CTA in card if present (.try-btn optional) */
+.try-btn, .tool-card a.cta, .tool-card a[target="_blank"] {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--accent) 18%, transparent), transparent);
+  border: 1px solid color-mix(in oklab, var(--accent) 40%, transparent);
+  transition: transform var(--speed), box-shadow var(--speed), border-color var(--speed);
+}
+.try-btn:hover, .tool-card a.cta:hover, .tool-card a[target="_blank"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(106,227,255,.25);
+  border-color: color-mix(in oklab, var(--accent) 60%, transparent);
+}
+
+/* Footer-less page spacing chosen by sections already */
+
+/* Small screens */
+@media (max-width: 640px) {
+  .dashboard-header { flex-direction: column; gap:8px; text-align:center; }
+  .header-buttons { flex-wrap: wrap; justify-content: center; }
+  .search-section { flex-direction: column; gap: 10px; }
+  #searchInput, #filterType { width: 100%; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* Nice scrollbars (Chromium) */
+*::-webkit-scrollbar { height: 10px; width: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--text) 14%, transparent);
+  border: 2px solid transparent; border-radius: 999px; background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: color-mix(in oklab, var(--accent) 40%, transparent); }
