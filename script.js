@@ -1,3 +1,4 @@
+// ==================== TOOLS DATA ====================
 const tools = [
   { name:"ChatGPT", description:"Multimodal conversational AI by OpenAI", type:"Free + Paid", link:"https://chat.openai.com" },
   { name:"Claude 4", description:"Advanced LLM from Anthropic", type:"Paid", link:"https://www.anthropic.com/claude" },
@@ -19,11 +20,12 @@ const tools = [
   { name:"GrammarlyGO", description:"AI writing assistant", type:"Free + Paid", link:"https://www.grammarly.com" }
 ];
 
-const container = document.getElementById("tools-container");
+// ==================== DOM ELEMENTS ====================
+const container   = document.getElementById("tools-container");
 const searchInput = document.getElementById("search");
-const toggleBtn = document.getElementById("theme-toggle");
+const toggleBtn   = document.getElementById("theme-toggle");
 
-// Render tools
+// ==================== RENDER TOOLS ====================
 function renderTools(filter = "") {
   container.innerHTML = "";
   tools
@@ -43,24 +45,30 @@ function renderTools(filter = "") {
 searchInput.addEventListener("input", e => renderTools(e.target.value));
 renderTools();
 
-// Theme Toggle (fixed)
+// ==================== THEME TOGGLE (Light / Dark) ====================
+// load theme from localStorage
 if (localStorage.getItem("theme") === "light") {
   document.documentElement.classList.add("light");
   toggleBtn.textContent = "🌙 Dark Mode";
+} else {
+  document.documentElement.classList.remove("light");
+  toggleBtn.textContent = "☀️ Light Mode";
 }
+
 toggleBtn.addEventListener("click", () => {
   document.documentElement.classList.toggle("light");
   const isLight = document.documentElement.classList.contains("light");
+
   toggleBtn.textContent = isLight ? "🌙 Dark Mode" : "☀️ Light Mode";
   localStorage.setItem("theme", isLight ? "light" : "dark");
 });
 
-// Chatbot frontend
-const chatBtn = document.getElementById("chatbot-button");
+// ==================== CHATBOT FRONTEND ====================
+const chatBtn    = document.getElementById("chatbot-button");
 const chatWindow = document.getElementById("chatbot-window");
-const closeChat = document.getElementById("close-chat");
-const chatBody = document.getElementById("chat-body");
-const chatInput = document.getElementById("chat-input");
+const closeChat  = document.getElementById("close-chat");
+const chatBody   = document.getElementById("chat-body");
+const chatInput  = document.getElementById("chat-input");
 
 chatBtn.addEventListener("click", () => chatWindow.classList.toggle("hidden"));
 closeChat.addEventListener("click", () => chatWindow.classList.add("hidden"));
