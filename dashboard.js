@@ -150,92 +150,145 @@ const tools = [
   { name: "Lightroom", type: "freemium", category: "mobile", link: "https://lightroom.adobe.com" }
 ];
 
- searchInput.addEventListener("input", () => {
-    const query = searchInput.value.toLowerCase();
-    toolCards.forEach((card, index) => {
-      const title = card.querySelector("h3").textContent.toLowerCase();
-      if (title.includes(query)) {
-        card.style.display = "block";
-        card.style.opacity = "0";
-        card.style.transform = "translateY(20px)";
-        setTimeout(() => {
-          card.style.transition = "all 0.4s ease";
-          card.style.opacity = "1";
-          card.style.transform = "translateY(0)";
-        }, index * 80); // staggered reveal
-      } else {
-        card.style.transition = "all 0.3s ease";
-        card.style.opacity = "0";
-        setTimeout(() => (card.style.display = "none"), 300);
-      }
-    });
+function renderTools(filter = "all", category = "all", search = "") {
+  const container = document.getElementById("toolsContainer");
+  container.innerHTML = "";
+  
+  let filtered = tools.filter(tool => {
+    const typeMatch = filter === "all" || tool.type === filter;
+    const categoryMatch = category === "all" || tool.category === category;
+    const searchMatch = search === "" || tool.name.toLowerCase().includes(search.toLowerCase());
+    return typeMatch && categoryMatch && searchMatch;
   });
-
-  // ---- Tool Card Hover Animation ----
-  toolCards.forEach((card) => {
-    card.addEventListener("mouseenter", () => {
-      card.style.transition = "all 0.3s ease";
-      card.style.transform = "scale(1.05) rotate(1deg)";
-      card.style.boxShadow = "0 10px 25px rgba(0, 0, 0, 0.4)";
-    });
-    card.addEventListener("mouseleave", () => {
-      card.style.transform = "scale(1) rotate(0)";
-      card.style.boxShadow = "0 5px 15px rgba(0, 0, 0, 0.2)";
-    });
-  });
-
-  // ---- Tool Open Animation ----
-  toolCards.forEach((card) => {
-    card.addEventListener("click", () => {
-      const title = card.querySelector("h3").textContent;
-      const description = card.getAttribute("data-description") || "No details available.";
-
-      toolTitle.textContent = title;
-      toolDescription.textContent = description;
-
-      toolDetails.classList.remove("hidden");
-      toolDetails.style.opacity = "0";
-      toolDetails.style.transform = "scale(0.9) translateY(20px)";
-
-      setTimeout(() => {
-        toolDetails.style.transition = "all 0.4s ease";
-        toolDetails.style.opacity = "1";
-        toolDetails.style.transform = "scale(1) translateY(0)";
-      }, 50);
-    });
-  });
-
-  // ---- Close Details Animation ----
-  closeDetailsBtn.addEventListener("click", () => {
-    toolDetails.style.transition = "all 0.3s ease";
-    toolDetails.style.opacity = "0";
-    toolDetails.style.transform = "scale(0.9) translateY(20px)";
-    setTimeout(() => {
-      toolDetails.classList.add("hidden");
-    }, 300);
-  });
-
-  // ---- Typing Animation for Header (Optional) ----
-  const header = document.querySelector(".dashboard-header h1");
-  if (header) {
-    const text = header.textContent;
-    header.textContent = "";
-    let i = 0;
-    const typing = setInterval(() => {
-      header.textContent += text[i];
-      i++;
-      if (i === text.length) clearInterval(typing);
-    }, 100);
+  
+  if (filtered.length === 0) {
+    container.innerHTML = "<p class='no-results'>No tools found matching your criteria.</p>";
+    return;
   }
-
-  // ---- Card Entry Animation on Load ----
-  toolCards.forEach((card, index) => {
-    card.style.opacity = "0";
-    card.style.transform = "translateY(20px)";
-    setTimeout(() => {
-      card.style.transition = "all 0.5s ease";
-      card.style.opacity = "1";
-      card.style.transform = "translateY(0)";
-    }, index * 120);
+  
+  filtered.forEach(tool => {
+    const card = document.createElement("div");
+    card.className = "tool-card";
+    card.innerHTML = 
+      <h3>${tool.name}</h3>
+      <p><strong>Type:</strong> ${tool.type}</p>
+      <p><strong>Category:</strong> ${tool.category}</p>
+      <div class="button-group">
+        <button class="visit-btn" onclick="window.open('${tool.link}', '_blank')">Visit</button>
+        <button class="try-now">Try Now</button>
+      </div>
+    ;
+    container.appendChild(card);
   });
+  
+  // Update results count
+  const resultsCount = document.getElementById("resultsCount");
+  if (resultsCount) {
+    resultsCount.textContent = Showing ${filtered.length} of ${tools.length} tools;
+  }
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+// Search functionality with debounce
+const debouncedSearch = debounce(() => {
+  const searchValue = document.getElementById("searchInput").value;
+  const filterValue = document.getElementById("filterType").value;
+  const categoryValue = document.getElementById("categoryFilter") ? 
+    document.getElementById("categoryFilter").value : "all";
+  renderTools(filterValue, categoryValue, searchValue);
+}, 300);
+
+// Event listeners
+document.addEventListener("DOMContentLoaded", () => {
+  // Search input
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("input", debouncedSearch);
+  }
+  
+  // Filter by type
+  const filterType = document.getElementById("filterType");
+  if (filterType) {
+    filterType.addEventListener("change", function() {
+      const searchValue = document.getElementById("searchInput").value;
+      const categoryValue = document.getElementById("categoryFilter") ? 
+        document.getElementById("categoryFilter").value : "all";
+      renderTools(this.value, categoryValue, searchValue);
+    });
+  }
+  
+  // Filter by category
+  const categoryFilter = document.getElementById("categoryFilter");
+  if (categoryFilter) {
+    categoryFilter.addEventListener("change", function() {
+      const searchValue = document.getElementById("searchInput").value;
+      const filterValue = document.getElementById("filterType").value;
+      renderTools(filterValue, this.value, searchValue);
+    });
+  }
+  
+  // Logout button
+  const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", function() {
+      // Note: localStorage not available in Claude artifacts
+      // localStorage.removeItem("user");
+      window.location.href = "login.html";
+    });
+  }
+  
+  // Home button
+  const homeBtn = document.getElementById("homeBtn");
+  if (homeBtn) {
+    homeBtn.addEventListener("click", function() {
+      window.location.href = "index.html";
+    });
+  }
+  
+  // Initial render
+  renderTools();
 });
+
+// Theme toggle functionality
+if (toggleBtn) {
+  // Load saved theme (Note: localStorage not available in Claude artifacts)
+  // const savedTheme = localStorage.getItem("theme");
+  const savedTheme = "dark"; // Default to dark theme
+  
+  if (savedTheme === "light") {
+    body.classList.remove("dark-theme");
+    body.classList.add("light-theme");
+    toggleBtn.textContent = "🌙 Dark Mode";
+  } else {
+    body.classList.remove("light-theme");
+    body.classList.add("dark-theme");
+    toggleBtn.textContent = "☀️ Light Mode";
+  }
+  
+  // Toggle theme on button click
+  toggleBtn.addEventListener("click", () => {
+    const isDark = body.classList.contains("dark-theme");
+    if (isDark) {
+      body.classList.remove("dark-theme");
+      body.classList.add("light-theme");
+      toggleBtn.textContent = "🌙 Dark Mode";
+      // localStorage.setItem("theme", "light");
+    } else {
+      body.classList.remove("light-theme");
+      body.classList.add("dark-theme");
+      toggleBtn.textContent = "☀️ Light Mode";
+      // localStorage.setItem("theme", "dark");
+    }
+  });
+}
